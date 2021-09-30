@@ -1,4 +1,4 @@
-export const rarityClass = () => {
+export const rarityClass = (rarity) => {
   switch (rarity) {
     case 'Common':
       return 'common';

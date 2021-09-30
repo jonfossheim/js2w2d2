@@ -1,7 +1,7 @@
 import { rarityClass, findIndex, containsObject } from './helpers.js';
-import { cardCon, collCon } from './constants.js';
+import { cardCon, collCon, API_URL } from './constants.js';
 // Arrays
-const items = [
+/*const items = [
   {
     id: 1,
     name: 'Master Oogway',
@@ -18,17 +18,36 @@ const items = [
     type: 'demon',
     rarity: 'Uncommon',
   },
-];
+];*/
 
 let collection = [];
+let items = [];
+
+const renderCards = () => {
+  cardCon.innerHTML = '';
+
+  items.forEach((item) => {
+    cardCon.innerHTML += createCard(item, 'add');
+  });
+
+  addListener();
+};
+
+async function getCards(url) {
+  const response = await fetch(url);
+  console.log(response);
+  const resObject = await response.json();
+  console.log(resObject);
+  items = resObject.cards;
+  renderCards();
+}
 
 const createCard = (item, version) => {
-  const { id, name, race, type, img } = item;
+  const { id, name, type, rarity, imageUrl } = item;
 
   return `
-  <div class="card">
+  <div class="card ${rarityClass(rarity)}">
   <h2>${name}</h2>
-  <h3>${race}</h3>
   <p>${type}</p>
   <button type="button" id="${id}-${version}">yes</button>
   </div>
@@ -62,19 +81,10 @@ const removeListener = () => {
       .getElementById(`${item.id}-remove`)
       .addEventListener('click', () => {
         collection.splice(findIndex(collection, item), 1);
+
         renderCollection();
       });
   });
 };
 
-const renderCards = () => {
-  cardCon.innerHTML = '';
-
-  items.forEach((item) => {
-    cardCon.innerHTML += createCard(item, 'add');
-  });
-
-  addListener();
-};
-
-renderCards();
+getCards(API_URL);
