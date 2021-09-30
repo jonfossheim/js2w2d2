@@ -1,3 +1,5 @@
+import { rarityClass, findIndex, containsObject } from './helpers.js';
+import { cardCon, collCon } from './constants.js';
 // Arrays
 const items = [
   {
@@ -6,6 +8,7 @@ const items = [
     race: 'Humanoid Animal',
     img: 'https://images.unsplash.com/photo-1571043733612-d5444ff7d4ae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=735&q=80',
     type: 'nature',
+    rarity: 'Common',
   },
   {
     id: 2,
@@ -13,25 +16,23 @@ const items = [
     race: 'ManBearPig',
     img: 'https://images.unsplash.com/photo-1571043733612-d5444ff7d4ae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=735&q=80',
     type: 'demon',
+    rarity: 'Uncommon',
   },
 ];
 
 let collection = [];
 
-// Containers
+const createCard = (item, version) => {
+  const { id, name, race, type, img } = item;
 
-const cardCon = document.querySelector('.cards-container');
-
-const collCon = document.querySelector('.collection-container');
-
-// Renderers
-
-const findIndex = (array, item) => {
-  return array
-    .map((x) => {
-      return x.id;
-    })
-    .indexOf(item.id);
+  return `
+  <div class="card">
+  <h2>${name}</h2>
+  <h3>${race}</h3>
+  <p>${type}</p>
+  <button type="button" id="${id}-${version}">yes</button>
+  </div>
+`;
 };
 
 const renderCollection = () => {
@@ -45,10 +46,12 @@ const renderCollection = () => {
 const addListener = () => {
   items.forEach((item) => {
     document.getElementById(`${item.id}-add`).addEventListener('click', () => {
-      collection.push(items[findIndex(items, item)]);
-
-      console.log(collection);
-      renderCollection();
+      if (containsObject(item, collection)) {
+        return;
+      } else {
+        collection.push(items[findIndex(items, item)]);
+        renderCollection();
+      }
     });
   });
 };
@@ -60,22 +63,8 @@ const removeListener = () => {
       .addEventListener('click', () => {
         collection.splice(findIndex(collection, item), 1);
         renderCollection();
-        console.log(collection);
       });
   });
-};
-
-const createCard = (item, version) => {
-  const { id, name, race, type, img } = item;
-
-  return `
-    <div class="card">
-    <h2>${name}</h2>
-    <h3>${race}</h3>
-    <p>${type}</p>
-    <button type="button" id="${id}-${version}">yes</button>
-    </div>
-  `;
 };
 
 const renderCards = () => {

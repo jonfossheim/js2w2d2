@@ -39,10 +39,25 @@
   max-height: 500px;
   padding: 0.6rem;
   margin: 0.2rem;
-  border: 8px solid black;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: blanchedalmond;
+}
+
+.common {
+  border: 8px solid grey;
+}
+
+.uncommon {
+  border: 8px solid lightgreen;
+}
+
+.rare {
+  border: 8px solid blue;
+}
+
+.legendary {
+  border: 8px solid orange;
 }
